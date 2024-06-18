@@ -12,8 +12,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
     crawl_type: Field::Select.with_options(searchable: false, collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     status: Field::Select.with_options(searchable: false, collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     url: Field::String,
-    created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    created_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
