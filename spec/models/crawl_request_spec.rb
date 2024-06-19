@@ -7,7 +7,7 @@ RSpec.describe CrawlRequest, type: :model do
     it { should validate_presence_of(:status) }
 
     it { should define_enum_for(:crawl_type).with_values([:single_page, :entire_site]) }
-    it { should define_enum_for(:status).with_values([:pending, :in_progress, :completed, :failed]) }
+    it { should define_enum_for(:status).with_values(pending: 0, in_progress: 10, completed: 20, failed: 30) }
 
     it do
       should allow_values("http://example.com", "https://example.com").for(:url)
