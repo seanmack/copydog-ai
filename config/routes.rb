@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   namespace :admin do
-      resources :crawl_requests
+      resources :crawl_requests do
+        resources :crawl_jobs, only: [:create]
+      end
 
       root to: "crawl_requests#index"
     end
