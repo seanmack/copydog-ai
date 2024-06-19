@@ -11,6 +11,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
     id: Field::Number,
     crawl_type: Field::Select.with_options(searchable: false, collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     status: Field::Select.with_options(searchable: false, collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
+    failure_message: Field::String,
     url: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime
@@ -25,6 +26,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
     id
     crawl_type
     status
+    failure_message
     url
   ].freeze
 
@@ -34,6 +36,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
     id
     crawl_type
     status
+    failure_message
     url
     created_at
     updated_at
@@ -45,6 +48,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     crawl_type
     status
+    failure_message
     url
   ].freeze
 
