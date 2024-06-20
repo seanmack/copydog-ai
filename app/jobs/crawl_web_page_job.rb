@@ -14,6 +14,8 @@ class CrawlWebPageJob < ApplicationJob
 
   private
 
+  # TODO: This method is long and could use a refactor. But while we're still
+  # developing the feature, it's easiest to see everything in one place.
   def handle_success(crawl_request, result)
     crawl_request.html_response.purge if crawl_request.html_response.attached?
 
@@ -23,7 +25,13 @@ class CrawlWebPageJob < ApplicationJob
       content_type: "text/html"
     )
 
-    crawl_request.update(status: "completed", failure_message: nil)
+    page_analysis = PageAnalysis.new(content: result[:body])
+
+    crawl_request.update(
+      status: "completed",
+      failure_message: nil,
+      title: page_analysis.title,
+    )
   end
 
   def handle_failure(crawl_request, result)
