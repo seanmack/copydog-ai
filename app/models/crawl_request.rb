@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CrawlRequest < ApplicationRecord
+  has_one_attached :html_response
+
   enum :crawl_type, { single_page: 0, entire_site: 1 }
   enum :status, { pending: 0, in_progress: 10, completed: 20, failed: 30 }
 

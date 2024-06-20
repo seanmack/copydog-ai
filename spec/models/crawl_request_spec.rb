@@ -14,4 +14,15 @@ RSpec.describe CrawlRequest, type: :model do
       should_not allow_values("example", "htp://example", "ftp://example.com").for(:url)
     end
   end
+
+  describe "attachments" do
+    it "can attach an HTML response" do
+      crawl_request = create(:crawl_request)
+      file = StringIO.new("<html></html>")
+      crawl_request.html_response.attach(io: file, filename: "test.html", content_type: "text/html")
+
+      expect(crawl_request.html_response).to be_attached
+      expect(crawl_request.html_response.blob.filename).to eq("test.html")
+    end
+  end
 end
