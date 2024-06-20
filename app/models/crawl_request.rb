@@ -7,4 +7,6 @@ class CrawlRequest < ApplicationRecord
 
   validates :url, presence: true, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }
   validates :status, presence: true
+
+  store_accessor :analysis, :title
 end
