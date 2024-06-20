@@ -46,6 +46,16 @@ RSpec.describe CrawlWebPageJob, type: :job do
     expect(second_attachment).to eq("<html>Second</html>")
   end
 
+  it "extracts and saves the title from the HTML response" do
+    crawl_request = create(:crawl_request)
+    crawler = mock_crawler_with(success: true, body: "<html><head><title>Test Title</title></head><body></body></html>")
+
+    described_class.perform_now(crawl_request.id, crawler)
+
+    crawl_request.reload
+    expect(crawl_request.title).to eq("Test Title")
+  end
+
   def mock_crawler_with(result)
     crawler = instance_double("Crawlers::SimpleCrawler")
     allow(crawler).to receive(:fetch).and_return(result)

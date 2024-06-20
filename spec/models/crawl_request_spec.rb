@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe CrawlRequest, type: :model do
+  describe "columns" do
+    it { should have_db_column(:analysis).of_type(:jsonb).with_options(default: {}) }
+  end
+
   describe "validations" do
     it { should validate_presence_of(:url) }
     it { should validate_presence_of(:status) }
@@ -20,6 +24,14 @@ RSpec.describe CrawlRequest, type: :model do
 
       expect(crawl_request.html_response).to be_attached
       expect(crawl_request.html_response.blob.filename).to eq("test.html")
+    end
+  end
+
+  describe "store_accessor for analysis" do
+    it "allows setting and getting the title" do
+      crawl_request = create(:crawl_request)
+      crawl_request.title = "Test Title"
+      expect(crawl_request.title).to eq("Test Title")
     end
   end
 end

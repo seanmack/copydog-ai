@@ -12,6 +12,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
     status: Field::Select.with_options(searchable: false, collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     failure_message: Field::String,
     url: Field::String,
+    title: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze
@@ -35,6 +36,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
     status
     failure_message
     url
+    title
     created_at
     updated_at
   ].freeze
