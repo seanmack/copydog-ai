@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe CrawlWebPageJob, type: :job do
   it "updates the status to completed when the crawl is successful and attaches the HTML response" do
     crawl_request = create(:crawl_request)
-    crawler = mock_crawler_with(success: true, body: "<html></html>")
+    crawler = mock_crawler(success: true, body: "<html></html>")
 
     described_class.perform_now(crawl_request.id, crawler)
 
@@ -18,7 +18,7 @@ RSpec.describe CrawlWebPageJob, type: :job do
 
   it "updates the status to failed with the failure message when the crawl fails" do
     crawl_request = create(:crawl_request)
-    crawler = mock_crawler_with(success: false, error: "500")
+    crawler = mock_crawler(success: false, error: "500")
 
     described_class.perform_now(crawl_request.id, crawler)
 
@@ -30,8 +30,8 @@ RSpec.describe CrawlWebPageJob, type: :job do
 
   it "purges the existing attachment before attaching a new one" do
     crawl_request = create(:crawl_request)
-    first_crawler = mock_crawler_with(success: true, body: "<html>First</html>")
-    second_crawler = mock_crawler_with(success: true, body: "<html>Second</html>")
+    first_crawler = mock_crawler(success: true, body: "<html>First</html>")
+    second_crawler = mock_crawler(success: true, body: "<html>Second</html>")
 
     # First time
     described_class.perform_now(crawl_request.id, first_crawler)
@@ -48,7 +48,9 @@ RSpec.describe CrawlWebPageJob, type: :job do
 
   it "extracts and saves the title from the HTML response" do
     crawl_request = create(:crawl_request)
-    crawler = mock_crawler_with(success: true, body: "<html><head><title>Test Title</title></head><body></body></html>")
+    crawler = mock_crawler(success: true)
+    parser = mock_parser(title: "Test Title")
+    allow(PageAnalysis::Parser).to receive(:new).and_return(parser)
 
     described_class.perform_now(crawl_request.id, crawler)
 
@@ -56,9 +58,25 @@ RSpec.describe CrawlWebPageJob, type: :job do
     expect(crawl_request.title).to eq("Test Title")
   end
 
-  def mock_crawler_with(result)
-    crawler = instance_double("Crawlers::SimpleCrawler")
-    allow(crawler).to receive(:fetch).and_return(result)
-    crawler
+  it "extracts and saves the meta description from the HTML response" do
+    crawl_request = create(:crawl_request)
+    crawler = mock_crawler(success: true)
+    parser = mock_parser(meta_description: "Test Description")
+    allow(PageAnalysis::Parser).to receive(:new).and_return(parser)
+
+    described_class.perform_now(crawl_request.id, crawler)
+
+    crawl_request.reload
+    expect(crawl_request.meta_description).to eq("Test Description")
+  end
+
+  def mock_crawler(result = {})
+    default_result = { success: true, body: "", error: nil }
+    instance_double("Crawlers::SimpleCrawler", fetch: default_result.merge(result))
+  end
+
+  def mock_parser(attributes = {})
+    defaults = { title: nil, meta_description: nil }
+    instance_double("PageAnalysis::Parser", defaults.merge(attributes))
   end
 end
