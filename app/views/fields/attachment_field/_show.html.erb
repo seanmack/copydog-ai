@@ -1,0 +1,5 @@
+<% if field.data.attached? %>
+  <%= link_to "Download", rails_blob_path(field.data, disposition: "attachment"), target: "_blank" %>
+<% else %>
+  No attachment
+<% end %>
