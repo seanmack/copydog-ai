@@ -25,12 +25,13 @@ class CrawlWebPageJob < ApplicationJob
       content_type: "text/html"
     )
 
-    page_analysis = PageAnalysis.new(content: result[:body])
+    page_analysis = PageAnalysis::Parser.new(content: result[:body])
 
     crawl_request.update(
       status: "completed",
       failure_message: nil,
       title: page_analysis.title,
+      meta_description: page_analysis.meta_description
     )
   end
 

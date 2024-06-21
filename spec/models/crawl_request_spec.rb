@@ -33,5 +33,11 @@ RSpec.describe CrawlRequest, type: :model do
       crawl_request.title = "Test Title"
       expect(crawl_request.title).to eq("Test Title")
     end
+
+    it "allows setting and getting the meta_description" do
+      crawl_request = create(:crawl_request)
+      crawl_request.meta_description = "Test meta description"
+      expect(crawl_request.meta_description).to eq("Test meta description")
+    end
   end
 end
