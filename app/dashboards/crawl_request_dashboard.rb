@@ -13,6 +13,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
     failure_message: Field::String,
     url: Field::String,
     title: Field::String,
+    html_response: AttachmentField,
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze
@@ -37,6 +38,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
     failure_message
     url
     title
+    html_response
     created_at
     updated_at
   ].freeze

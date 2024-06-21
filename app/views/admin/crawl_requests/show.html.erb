@@ -66,12 +66,6 @@ as well as a link to its edit page.
           <dd class="attribute-data attribute-data--<%=attribute.html_class%>"
               ><%= render_field attribute, page: page %></dd>
         <% end %>
-
-        <% if page.resource.html_response.attached? %>
-          <dt class="attribute-label">HTML Response</dt>
-          <dd class="attribute-data"
-              ><%= link_to "Download", rails_blob_path(page.resource.html_response, disposition: "attachment"), target: "_blank" %></dd>
-        <% end %>
       </fieldset>
     <% end %>
   </dl>
