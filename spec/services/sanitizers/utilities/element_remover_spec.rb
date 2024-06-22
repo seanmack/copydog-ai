@@ -6,17 +6,15 @@ RSpec.describe Sanitizers::Utilities::ElementRemover do
       elements = %w[head script style]
 
       html_content = <<-HTML
-        <html>
-          <head>
-            <title>Test Title</title>
-            <style>body { font-family: Arial; }</style>
-            <script>alert('Hello, World!');</script>
-          </head>
-          <body>
-            <h1>Main Title</h1>
-            <p>Some content here.</p>
-          </body>
-        </html>
+        <head>
+          <title>Test Title</title>
+          <style>body { font-family: Arial; }</style>
+          <script>alert('Hello, World!');</script>
+        </head>
+        <body>
+          <h1>Main Title</h1>
+          <p>Some content here.</p>
+        </body>
       HTML
 
       result = described_class.new(html_content:, elements:).remove_elements
@@ -25,7 +23,7 @@ RSpec.describe Sanitizers::Utilities::ElementRemover do
         expect(Nokogiri::HTML(result).at(element)).to be_nil
       end
 
-      expect(result.strip).to include("<html>")
+      expect(result.strip).not_to include("<html>")
       expect(result.strip).to include("<body>")
       expect(result.strip).to include("<h1>Main Title</h1>")
       expect(result.strip).to include("<p>Some content here.</p>")

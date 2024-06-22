@@ -9,7 +9,7 @@ module Sanitizers
       end
 
       def remove_elements
-        doc = Nokogiri::HTML(html_content)
+        doc = Nokogiri::HTML.fragment(html_content)
 
         elements.each do |element|
           doc.css(element).remove
