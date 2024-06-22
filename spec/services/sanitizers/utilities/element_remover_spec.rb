@@ -5,7 +5,7 @@ RSpec.describe Sanitizers::Utilities::ElementRemover do
     it "calls Sanitize.fragment with the correct arguments" do
       html_content = "<div></div>"
       config = { elements: %w[div span], attributes: { "a" => %w[href] } }
-      sanitizer = described_class.new(html_content:, config:)
+      sanitizer = described_class.new(html_content: html_content, config: config)
 
       allow(Sanitize).to receive(:fragment).and_return("")
 
@@ -16,8 +16,8 @@ RSpec.describe Sanitizers::Utilities::ElementRemover do
 
     it "uses the default config when no config is provided" do
       html_content = "<div></div>"
-      default_config = Sanitizers::DEFAULT_SANITIZER_CONFIG
-      sanitizer = described_class.new(html_content:)
+      default_config = Sanitizers::Utilities::ElementRemover::DEFAULT_SANITIZER_CONFIG
+      sanitizer = described_class.new(html_content: html_content)
 
       allow(Sanitize).to receive(:fragment).and_return("")
 
