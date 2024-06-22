@@ -1,7 +1,5 @@
 module Sanitizers
   class BaseSanitizer
-    DEFAULT_ELEMENTS_TO_REMOVE = %w[head script style]
-
     def sanitize
       raise NotImplementedError, "Subclasses must implement the sanitize method"
     end
@@ -12,8 +10,8 @@ module Sanitizers
       Sanitizers::Utilities::InnerHtmlExtractor.new(html_content:, element:).extract_inner_html
     end
 
-    def remove_elements(html_content:, elements: DEFAULT_ELEMENTS_TO_REMOVE)
-      Sanitizers::Utilities::ElementRemover.new(html_content:, elements:).remove_elements
+    def remove_elements(html_content:)
+      Sanitizers::Utilities::ElementRemover.new(html_content:).remove_elements
     end
 
     def beautify(html_content:)
