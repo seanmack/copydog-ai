@@ -2,31 +2,28 @@ require "rails_helper"
 
 RSpec.describe Sanitizers::Utilities::ElementRemover do
   describe "#remove_elements" do
-    it "removes elements from the HTML" do
-      elements = %w[head script style]
+    it "calls Sanitize.fragment with the correct arguments" do
+      html_content = "<div></div>"
+      config = { elements: %w[div span], attributes: { "a" => %w[href] } }
+      sanitizer = described_class.new(html_content: html_content, config: config)
 
-      html_content = <<-HTML
-        <head>
-          <title>Test Title</title>
-          <style>body { font-family: Arial; }</style>
-          <script>alert('Hello, World!');</script>
-        </head>
-        <body>
-          <h1>Main Title</h1>
-          <p>Some content here.</p>
-        </body>
-      HTML
+      allow(Sanitize).to receive(:fragment).and_return("")
 
-      result = described_class.new(html_content:, elements:).remove_elements
+      sanitizer.remove_elements
 
-      elements.each do |element|
-        expect(Nokogiri::HTML(result).at(element)).to be_nil
-      end
+      expect(Sanitize).to have_received(:fragment).with(html_content, config)
+    end
 
-      expect(result.strip).not_to include("<html>")
-      expect(result.strip).to include("<body>")
-      expect(result.strip).to include("<h1>Main Title</h1>")
-      expect(result.strip).to include("<p>Some content here.</p>")
+    it "uses the default config when no config is provided" do
+      html_content = "<div></div>"
+      default_config = Sanitizers::Utilities::ElementRemover::DEFAULT_SANITIZER_CONFIG
+      sanitizer = described_class.new(html_content: html_content)
+
+      allow(Sanitize).to receive(:fragment).and_return("")
+
+      sanitizer.remove_elements
+
+      expect(Sanitize).to have_received(:fragment).with(html_content, default_config)
     end
   end
 end

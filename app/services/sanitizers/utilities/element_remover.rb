@@ -1,22 +1,35 @@
 module Sanitizers
   module Utilities
     class ElementRemover < BaseUtility
-      attr_reader :elements
+      attr_reader :config
 
-      def initialize(html_content:, elements:)
+      def initialize(html_content:, config: DEFAULT_SANITIZER_CONFIG)
         super(html_content:)
-        @elements = elements
+        @config = config
       end
 
       def remove_elements
-        doc = Nokogiri::HTML.fragment(html_content)
-
-        elements.each do |element|
-          doc.css(element).remove
-        end
-
-        doc.to_html
+        Sanitize.fragment(html_content, config)
       end
+
+      DEFAULT_SANITIZER_CONFIG = {
+        elements: %w[div span p a ul ol li],
+        attributes: {
+          "a" => %w[href]
+        },
+        protocols: {
+          "a" => { "href" => ["http", "https"] }
+        },
+        transformers: lambda do |env|
+          node = env[:node]
+          return unless node.elem?
+
+          # Remove empty nodes
+          unless node.children.any? { |c| !c.text? || c.content.strip.length > 0 }
+            node.unlink
+          end
+        end
+      }
     end
   end
 end

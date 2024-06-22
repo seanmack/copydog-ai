@@ -37,6 +37,7 @@ gem "bootsnap", require: false
 gem "administrate"
 gem "htmlbeautifier"
 gem "httparty"
+gem "sanitize"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
