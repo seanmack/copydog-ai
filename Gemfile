@@ -37,6 +37,7 @@ gem "bootsnap", require: false
 gem "administrate"
 gem "htmlbeautifier"
 gem "httparty"
+gem "ruby-openai"
 gem "sanitize"
 
 group :development, :test do
