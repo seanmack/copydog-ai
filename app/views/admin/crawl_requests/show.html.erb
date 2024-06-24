@@ -72,11 +72,11 @@ as well as a link to its edit page.
 
   <%# TODO: this is just a quick way of displaying the results for now %>
   <% if page.resource.html_response.attached? %>
-    <h2>Sanitized Content</h2>
+    <h2>Primary Content Extracted by OpenAI</h2>
     <div style="overflow-x: auto;">
-      <% html_content = page.resource.html_response.download %>
-      <% sanitized_content = Sanitizers::SimpleSanitizer.new(html_content: html_content).sanitize %>
-      <pre><code><%= sanitized_content %></code></pre>
+      <% html = page.resource.html_response.download %>
+      <% response = SendContentForAnalysis.new(html:).call %>
+      <pre><code><%= response %></code></pre>
     </div>
   <% end %>
 </section>
