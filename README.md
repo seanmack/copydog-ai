@@ -24,3 +24,11 @@ CopydogAI aims to make this process easier and more affordable.
 
 CopydogAI is currently in the initial stages of development. I'm working on
 building out the core functionality and getting the basic API up and running.
+
+
+# Setup
+
+1. Clone this repository
+2. `bin/setup`
+3. `cp example.env .env`
+4. Add your API keys to the `.env` file
