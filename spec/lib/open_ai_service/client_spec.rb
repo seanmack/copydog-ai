@@ -25,4 +25,25 @@ RSpec.describe OpenAiService::Client do
       expect(result).to eq("Test response")
     end
   end
+
+  describe "#build_parameters" do
+    it "builds the correct parameters for the OpenAI API request" do
+      prompt = "Test prompt"
+      content = "Test content"
+
+      client = OpenAiService::Client.new
+      parameters = client.send(:build_parameters, prompt:, content:)
+
+      expected_parameters = {
+        model: "gpt-3.5-turbo",
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: prompt },
+          { role: "user", content: content }
+        ]
+      }
+
+      expect(parameters).to eq(expected_parameters)
+    end
+  end
 end

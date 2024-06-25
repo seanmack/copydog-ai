@@ -5,16 +5,22 @@ module OpenAiService
     end
 
     def send_request(prompt:, content:)
-      response = @client.chat(
-        parameters: {
-          model: "gpt-3.5-turbo",
-          messages: [
-            { role: "system", content: prompt },
-            { role: "user", content: content }
-          ]
-        }
-      )
+      parameters = build_parameters(prompt:, content:)
+      response = @client.chat(parameters:)
       response.dig("choices", 0, "message", "content")
+    end
+
+    private
+
+    def build_parameters(prompt:, content:)
+      {
+        model: "gpt-3.5-turbo",
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: prompt },
+          { role: "user", content: content }
+        ]
+      }
     end
   end
 end
