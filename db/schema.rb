@@ -53,8 +53,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_06_25_105849) do
 
   create_table "web_page_drafts", force: :cascade do |t|
     t.string "title", null: false
-    t.jsonb "body", default: {}, null: false
     t.bigint "crawl_request_id"
+    t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["crawl_request_id"], name: "index_web_page_drafts_on_crawl_request_id"

@@ -15,6 +15,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
     title: Field::String,
     meta_description: Field::String,
     html_response: AttachmentField,
+    web_page_draft: Field::HasOne,
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze
@@ -41,6 +42,7 @@ class CrawlRequestDashboard < Administrate::BaseDashboard
     title
     meta_description
     html_response
+    web_page_draft
     created_at
     updated_at
   ].freeze

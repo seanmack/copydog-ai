@@ -5,6 +5,11 @@ RSpec.describe CrawlRequest, type: :model do
     it { should have_db_column(:analysis).of_type(:jsonb).with_options(default: {}) }
   end
 
+  describe "associations" do
+    it { should have_one_attached(:html_response) }
+    it { should have_one(:web_page_draft) }
+  end
+
   describe "validations" do
     it { should validate_presence_of(:url) }
     it { should validate_presence_of(:status) }

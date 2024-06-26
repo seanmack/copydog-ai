@@ -31,10 +31,10 @@ class WebPageDraftDashboard < Administrate::BaseDashboard
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = %i[
-    id
-    body
     crawl_request
     title
+    body
+    id
     created_at
     updated_at
   ].freeze
