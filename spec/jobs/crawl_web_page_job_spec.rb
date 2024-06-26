@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe CrawlWebPageJob, type: :job do
+  before do
+    stub_send_content_for_analysis
+  end
+
   it "updates the status to completed when the crawl is successful and attaches the HTML response" do
     crawl_request = create(:crawl_request)
     crawler = mock_crawler(success: true, body: "<html></html>")
@@ -33,13 +37,11 @@ RSpec.describe CrawlWebPageJob, type: :job do
     first_crawler = mock_crawler(success: true, body: "<html>First</html>")
     second_crawler = mock_crawler(success: true, body: "<html>Second</html>")
 
-    # First time
     described_class.perform_now(crawl_request.id, first_crawler)
     crawl_request.reload
     first_attachment = crawl_request.html_response.download
     expect(first_attachment).to eq("<html>First</html>")
 
-    # Second time
     described_class.perform_now(crawl_request.id, second_crawler)
     crawl_request.reload
     second_attachment = crawl_request.html_response.download
@@ -70,6 +72,18 @@ RSpec.describe CrawlWebPageJob, type: :job do
     expect(crawl_request.meta_description).to eq("Test Description")
   end
 
+  it "calls SendContentForAnalysis and creates a WebPageDraft" do
+    crawl_request = create(:crawl_request)
+    crawler = mock_crawler(success: true, body: "<html></html>")
+    parser = mock_parser(title: "Test Title", meta_description: "Test Description")
+    allow(PageAnalysis::Parser).to receive(:new).and_return(parser)
+
+    described_class.perform_now(crawl_request.id, crawler)
+
+    expect(SendContentForAnalysis).to have_received(:new).with(html: "<html></html>")
+    expect(WebPageDraft.last.title).to eq("Test Title")
+  end
+
   def mock_crawler(result = {})
     default_result = { success: true, body: "", error: nil }
     instance_double("Crawlers::SimpleCrawler", fetch: default_result.merge(result))
@@ -78,5 +92,10 @@ RSpec.describe CrawlWebPageJob, type: :job do
   def mock_parser(attributes = {})
     defaults = { title: nil, meta_description: nil }
     instance_double("PageAnalysis::Parser", defaults.merge(attributes))
+  end
+
+  def stub_send_content_for_analysis
+    response = [{ "title" => "Section 1", "html" => "<p>Content</p>" }]
+    allow(SendContentForAnalysis).to receive(:new).and_return(instance_double(SendContentForAnalysis, call: response))
   end
 end
