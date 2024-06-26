@@ -36,7 +36,6 @@ RSpec.describe OpenAiService::Client do
 
       expected_parameters = {
         model: "gpt-3.5-turbo",
-        response_format: { type: "json_object" },
         messages: [
           { role: "system", content: prompt },
           { role: "user", content: content }
