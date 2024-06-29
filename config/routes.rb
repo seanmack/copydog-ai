@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       end
 
       resources :web_page_drafts
+      resources :bulk_crawl_requests
 
       root to: "crawl_requests#index"
     end

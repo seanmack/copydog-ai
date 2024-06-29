@@ -8,6 +8,7 @@ RSpec.describe CrawlRequest, type: :model do
   describe "associations" do
     it { should have_one_attached(:html_response) }
     it { should have_one(:web_page_draft) }
+    it { should belong_to(:bulk_crawl_request).optional }
   end
 
   describe "validations" do
