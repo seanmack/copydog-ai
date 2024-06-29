@@ -16,10 +16,9 @@ RSpec.describe OpenAiService::Client do
         ]
       }
 
-      client = OpenAiService::Client.new
-      allow(client).to receive(:initialize).and_return(OpenAI::Client.new)
       allow_any_instance_of(OpenAI::Client).to receive(:chat).and_return(response_body)
 
+      client = OpenAiService::Client.new
       result = client.send_request(prompt:, content:)
 
       expect(result).to eq("Test response")
