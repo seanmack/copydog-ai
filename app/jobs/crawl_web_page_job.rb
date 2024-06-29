@@ -1,3 +1,12 @@
+# Crawls a web page and processes the HTML content via the OpenAI API
+#
+# The job completes the following tasks:
+# 1. Fetches the HTML response from the given URL
+# 2. Attaches it to the crawl request
+# 3. Analyzes the HTML content and updates the crawl request with the analysis results
+# 4. Sends the HTML content to the SendContentForAnalysis service, i.e. to the OpenAI API
+# 5. Creates or updates a web page draft with the content from the OpenAI API
+
 class CrawlWebPageJob < ApplicationJob
   queue_as :default
 
@@ -14,42 +23,41 @@ class CrawlWebPageJob < ApplicationJob
 
   private
 
-  # TODO: This needs a refactor. But while we're still
-  # developing the feature, it's easiest to see everything in one place.
   def handle_success(crawl_request, result)
-    html_response = result[:body].force_encoding("UTF-8")
+    html_response = encode_html_response(result:)
+    attach_html_response(crawl_request:, html_response:)
+    analyze_html_content(crawl_request:, html_response:)
+    create_web_page_draft(crawl_request:, html_response:)
+  end
 
-    # Purge the existing attachment if it exists
-    crawl_request.html_response.purge if crawl_request.html_response.attached?
+  def encode_html_response(result:)
+    result[:body].force_encoding("UTF-8")
+  end
 
-    # Attach the new HTML response
+  def attach_html_response(crawl_request:, html_response:)
     crawl_request.html_response.attach(
       io: StringIO.new(html_response),
       filename: "crawl_response_#{crawl_request.id}.html",
       content_type: "text/html"
     )
+  end
 
-    # Parse the page and send the HTML for analysis (this will need error handling)
+  def analyze_html_content(crawl_request:, html_response:)
     page_analysis = PageAnalysis::Parser.new(content: html_response)
 
-    # Update the crawl request with the analysis results
     crawl_request.update!(
       status: "completed",
       failure_message: nil,
       title: page_analysis.title,
       meta_description: page_analysis.meta_description
     )
+  end
 
-    # Ask OpenAI to analyze the content of the page
+  def create_web_page_draft(crawl_request:, html_response:)
     body = SendContentForAnalysis.new(html: html_response).call
-
-    # Create a web page draft with the analysis results
+    title = crawl_request.title || "Web Page for #{crawl_request.url}"
     web_page_draft = WebPageDraft.find_or_initialize_by(crawl_request:)
-
-    web_page_draft.update!(
-      title: page_analysis.title || "Web Page Title",
-      body:
-    )
+    web_page_draft.update!(title:, body:)
   end
 
   def handle_failure(crawl_request, result)
