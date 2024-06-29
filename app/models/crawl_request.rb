@@ -3,6 +3,7 @@
 class CrawlRequest < ApplicationRecord
   has_one_attached :html_response
   has_one :web_page_draft
+  belongs_to :bulk_crawl_request, optional: true
 
   enum :status, { pending: 0, in_progress: 10, completed: 20, failed: 30 }
 

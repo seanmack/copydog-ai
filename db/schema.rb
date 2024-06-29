@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_06_25_105849) do
+ActiveRecord::Schema[7.2].define(version: 2024_06_29_213724) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,12 @@ ActiveRecord::Schema[7.2].define(version: 2024_06_25_105849) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "bulk_crawl_requests", force: :cascade do |t|
+    t.text "urls"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "crawl_requests", force: :cascade do |t|
     t.string "url", null: false
     t.integer "status", default: 0, null: false
@@ -49,6 +55,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_06_25_105849) do
     t.datetime "updated_at", null: false
     t.string "failure_message"
     t.jsonb "analysis", default: {}
+    t.bigint "bulk_crawl_request_id"
+    t.index ["bulk_crawl_request_id"], name: "index_crawl_requests_on_bulk_crawl_request_id"
   end
 
   create_table "web_page_drafts", force: :cascade do |t|
@@ -62,5 +70,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_06_25_105849) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "crawl_requests", "bulk_crawl_requests"
   add_foreign_key "web_page_drafts", "crawl_requests"
 end
