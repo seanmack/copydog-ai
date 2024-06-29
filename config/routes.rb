@@ -4,8 +4,11 @@ Rails.application.routes.draw do
         resources :crawl_jobs, only: [:create]
       end
 
+      resources :bulk_crawl_requests do
+        resources :bulk_crawl_jobs, only: [:create]
+      end
+
       resources :web_page_drafts
-      resources :bulk_crawl_requests
 
       root to: "crawl_requests#index"
     end
