@@ -1,4 +1,13 @@
-# Converts a string into an array of items
+# Parses a list of text items separated by newlines.
+#
+# @param text_list [String] The text containing newline-separated items.
+#
+# @example
+#   parser = TextListParser.new(text_list: "item1\nitem2\nitem3")
+#   items = parser.items
+#   # items => ["item1", "item2", "item3"]
+#
+# @return [Array<String>] An array of stripped, non-empty items.
 
 class TextListParser
   attr_reader :text_list

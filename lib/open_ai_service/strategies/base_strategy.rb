@@ -1,5 +1,7 @@
 module OpenAiService
   module Strategies
+    # Base class for OpenAI service strategies. See subclasses for usage.
+
     class BaseStrategy
       def prompt
         raise NotImplementedError, "Subclasses must implement the prompt method"
