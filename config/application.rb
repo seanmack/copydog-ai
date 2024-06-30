@@ -6,6 +6,9 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Enable frozen string literals by default
+require "freezolite/auto"
+
 module Copydog
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

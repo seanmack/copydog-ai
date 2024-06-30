@@ -35,6 +35,7 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 gem "administrate"
+gem "freezolite"
 gem "htmlbeautifier"
 gem "httparty"
 gem "ruby-openai"

@@ -31,7 +31,7 @@ class CrawlWebPageJob < ApplicationJob
   end
 
   def encode_html_response(result:)
-    result[:body].force_encoding("UTF-8")
+    result[:body].encode("UTF-8")
   end
 
   def attach_html_response(crawl_request:, html_response:)
