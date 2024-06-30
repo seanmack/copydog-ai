@@ -1,4 +1,6 @@
 module Sanitizers
+  # Base class for sanitizing HTML content. See subclasses for usage.
+
   class BaseSanitizer
     def sanitize
       raise NotImplementedError, "Subclasses must implement the sanitize method"
