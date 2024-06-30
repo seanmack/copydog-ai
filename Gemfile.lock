@@ -130,6 +130,8 @@ GEM
     ffi (1.17.0-x86-linux-gnu)
     ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
+    freezolite (0.5.0)
+      require-hooks (~> 0.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashdiff (1.1.0)
@@ -269,6 +271,7 @@ GEM
     regexp_parser (2.9.2)
     reline (0.5.9)
       io-console (~> 0.5)
+    require-hooks (0.2.2)
     rexml (3.3.0)
       strscan
     rspec-core (3.13.0)
@@ -400,6 +403,7 @@ DEPENDENCIES
   debug
   dotenv
   factory_bot_rails
+  freezolite
   htmlbeautifier
   httparty
   importmap-rails
